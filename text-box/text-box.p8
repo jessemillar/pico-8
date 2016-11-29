@@ -8,48 +8,45 @@ t=0 -- the timer for keeping track of things
 -- could be simplified to use less tokens but left verbose in the name of education
 function tbox(message)
 	local effective_width=width-border_thickness*2-padding*2
-	if(#message*4>effective_width) then -- check to see if the message is too long for one line (characters are four pixels wide)
-		local line_length=flr(effective_width/4) -- the character we split the string at to enable line breaks
+	for i=0,flr(#message*4/effective_width) do -- check to see if the message is too long for one line (characters are four pixels wide)
+		printh(sub(message,i,10))
+		add(tbox_messages,line_length=flr(effective_width/4)) -- add a segment of the message to the messages array for later display
 	end
 end
 
 -- draw the text boxes (if any)
 function tbox_draw()
-	local text_color=7 -- white text 
-	local fill_color=1 -- blue inner fill
-	local border_color=7 -- white border
-	local x=4
-	local y=92 -- 127-height-padding
-	local width= 119 -- 127-x*2
-	local height= 30 -- border_thickness+padding/2+8+padding+8+padding/2+border_thickness
-	local border_thickness=2
-	local padding=5
+	if(#tbox_messages>0) then
+		local text_color=7 -- white text 
+		local fill_color=1 -- blue inner fill
+		local border_color=7 -- white border
+		local x=4
+		local y=92 -- 127-height-padding
+		local width= 119 -- 127-x*2
+		local height= 30 -- border_thickness+padding/2+8+padding+8+padding/2+border_thickness
+		local border_thickness=2
+		local padding=5
 
-	rectfill(x, y, x+width, y+height, border_color) -- draw border rectangle
-	rectfill(x+border_thickness, y+border_thickness, x+width-border_thickness, y+height-border_thickness, fill_color) -- draw fill rectangle
-	line(x+border_thickness, y+border_thickness, x+width-border_thickness, y+border_thickness, 6) -- draw top border shadow 
-	line(x, y+height+border_thickness/2, x+width, y+height+border_thickness/2, 6) -- draw bottom border shadow 
+		rectfill(x, y, x+width, y+height, border_color) -- draw border rectangle
+		rectfill(x+border_thickness, y+border_thickness, x+width-border_thickness, y+height-border_thickness, fill_color) -- draw fill rectangle
+		line(x+border_thickness, y+border_thickness, x+width-border_thickness, y+border_thickness, 6) -- draw top border shadow 
+		line(x, y+height+border_thickness/2, x+width, y+height+border_thickness/2, 6) -- draw bottom border shadow 
 
-	local effective_width=width-border_thickness*2-padding*2
-	if(#message*4>effective_width) then -- check to see if the message is too long for one line (characters are four pixels wide)
-		local line_length=flr(effective_width/4) -- the character we split the string at to enable line breaks
-
-		print(sub(message, 0, line_length), x+padding, y+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
-
-	else
-		print(message, x+padding, y+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
-	end
-	
-	-- animate the arrow
-	if(t%10<5) then
-		spr(1, x+width-border_thickness*2-padding*2+2, y+height-border_thickness*2-padding*2+2) -- draw the continue arrow in the bottom-right corner (with some padding to get it closer to the corner)
-	else
-		spr(1, x+width-border_thickness*2-padding*2+2, y+height-border_thickness*2-padding*2+3) -- draw the continue arrow in the bottom-right corner (with some padding to get it closer to the corner)
+		print(tbox_messages[0], x+padding, y+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
+		print(tbox_messages[1], x+padding, y+8+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
+		
+		-- animate the arrow
+		if(t%10<5) then
+			spr(1, x+width-border_thickness*2-padding*2+2, y+height-border_thickness*2-padding*2+2) -- draw the continue arrow in the bottom-right corner (with some padding to get it closer to the corner)
+		else
+			spr(1, x+width-border_thickness*2-padding*2+2, y+height-border_thickness*2-padding*2+3) -- draw the continue arrow in the bottom-right corner (with some padding to get it closer to the corner)
+		end
 	end
 end
 
 function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
+	tbox("this is a super long test that should trigger the line break capabilities") -- add a test message box
 end
 
 function _update()
@@ -59,7 +56,6 @@ end
 function _draw()
 	cls() -- clear the screen
 	rectfill(0, 0, 128, 128, 3) -- fill the screen with a color for size testing purposes
-	tbox("this is a super long test that should trigger the line break capabilities") -- add a test message box
 	tbox_draw() -- draw the message boxes (if any)
 end
 
