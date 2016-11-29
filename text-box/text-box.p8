@@ -22,11 +22,13 @@ function tbox(message)
 	line(x+border_thickness, y+border_thickness, x+width-border_thickness, y+border_thickness, 6) -- draw top border shadow 
 	line(x, y+height+border_thickness/2, x+width, y+height+border_thickness/2, 6) -- draw bottom border shadow 
 
-	local line_number=0 -- keep track of which line we're on for line breaks
-	local split_character=0 -- the character we split the string at to enable line breaks
+	local effective_width=width-border_thickness*2-padding*2
+	if(#message*8>effective_width) then -- check to see if the message is too long for one line
+		local split_character=flr(effective_width/8) -- the character we split the string at to enable line breaks
 
-	if(#message*8>width-border_thickness*2-padding*2) then -- check to see if the message is too long for one line
-		print(message, x+padding, y+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
+		printh(sub(message, 0, 15))
+
+		print(sub(message, 0, split_character), x+padding, y+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
 		spr(1, x+width-border_thickness*2-padding*2+2, y+height-border_thickness*2-padding*2+2) -- draw the continue arrow in the bottom-right corner (with some padding to get it closer to the corner)
 	else
 		print(message, x+padding, y+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
