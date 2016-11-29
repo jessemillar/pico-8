@@ -7,8 +7,20 @@ t=0 -- the timer for keeping track of things
 -- add a new text box
 -- could be simplified to use less tokens but left verbose in the name of education
 function tbox(message)
+	for i=1,#message do
+		local current_character=sub(message,i,i)
+
+		if(current_character==" ") then
+			printh("Found space")
+		else
+			printh(current_character)
+		end
+	end
+
 	local effective_width=width-border_thickness*2-padding*2
-	for i=0,flr(#message*4/effective_width) do -- check to see if the message is too long for one line (characters are four pixels wide)
+	local line_length=flr(#message*4/effective_width)
+	
+	for i=0,line_length do -- check to see if the message is too long for one line (characters are four pixels wide)
 		printh(sub(message,i,10))
 		add(tbox_messages,line_length=flr(effective_width/4)) -- add a segment of the message to the messages array for later display
 	end
