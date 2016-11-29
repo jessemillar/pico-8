@@ -5,24 +5,23 @@ __lua__
 t=0 -- the timer for keeping track of things
 
 -- add a new text box
--- could be simplified to use less tokens but left verbose in the name of education
 function tbox(message)
-	for i=1,#message do
-		local current_character=sub(message,i,i)
+	local effective_width=105 -- width-border_thickness*2-padding*2
+	local line_count=flr(#message*4/effective_width) -- characters are 4 pixels wide
+	local line_width=flr(effective_width/4)
 
-		if(current_character==" ") then
-			printh("Found space")
-		else
-			printh(current_character)
+	if #message>effective_width/4 then
+		for i=0,line_count do
+			add(tbox_messages,sub(message,i*line_width,i*line_width+line_width))
 		end
 	end
+end
 
-	local effective_width=width-border_thickness*2-padding*2
-	local line_length=flr(#message*4/effective_width)
-	
-	for i=0,line_length do -- check to see if the message is too long for one line (characters are four pixels wide)
-		printh(sub(message,i,10))
-		add(tbox_messages,line_length=flr(effective_width/4)) -- add a segment of the message to the messages array for later display
+-- check for button presses so we can clear text box messages
+function tbox_check()
+	if btnp(5) and #tbox_messages>0 then
+		del(tbox_messages,tbox_messages[1])
+		del(tbox_messages,tbox_messages[1])
 	end
 end
 
@@ -33,9 +32,9 @@ function tbox_draw()
 		local fill_color=1 -- blue inner fill
 		local border_color=7 -- white border
 		local x=4
-		local y=92 -- 127-height-padding
+		local y=100
 		local width= 119 -- 127-x*2
-		local height= 30 -- border_thickness+padding/2+8+padding+8+padding/2+border_thickness
+		local height= 23
 		local border_thickness=2
 		local padding=5
 
@@ -44,8 +43,10 @@ function tbox_draw()
 		line(x+border_thickness, y+border_thickness, x+width-border_thickness, y+border_thickness, 6) -- draw top border shadow 
 		line(x, y+height+border_thickness/2, x+width, y+height+border_thickness/2, 6) -- draw bottom border shadow 
 
-		print(tbox_messages[0], x+padding, y+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
-		print(tbox_messages[1], x+padding, y+8+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
+		print(tbox_messages[1], x+padding, y+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
+		if #tbox_messages>1 then
+			print(tbox_messages[2], x+padding, y+8+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
+		end
 		
 		-- animate the arrow
 		if(t%10<5) then
@@ -63,6 +64,7 @@ end
 
 function _update()
 	t=t+1 -- increment the clock
+	tbox_check()
 end
 
 function _draw()
