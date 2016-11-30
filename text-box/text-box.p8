@@ -8,15 +8,28 @@ t=0 -- the timer for keeping track of things
 function tbox(message)
 	local linebreak=0
 
-	for i=0,flr(#message/25) do -- search through the message and break it into words
-		local new_line=sub(message,linebreak,linebreak+25)
+	for i=0,-flr(-#message/25) do -- search through the message and break it into words
+		local line=sub(message,linebreak,linebreak+26) -- lines are 25 characters but grap 26 to do a lookahead check
+		printh(line..#line)
 
-		for j=25,0,-1 do -- look backward for the first whitespace character to determine the linebreak
-			if sub(new_line,j,j)==" " then
-				add(tbox_messages,sub(new_line,0,j)) -- add the word to the array
-				linebreak+=j
-				break
+		if #line>=26 then
+			for j=#line,0,-1 do -- look backward for the first whitespace character to determine the linebreak
+				if sub(line,j,j)==" " then
+					local lookahead=0
+
+					if j==#line then -- if the line ends perfectly at the end of a word...
+						lookahead=1
+					end
+
+					add(tbox_messages,sub(line,0,j+lookahead)) -- add the word to the array
+					linebreak+=j+lookahead
+					break
+				elseif j==0 then
+					linebreak+=j
+				end
 			end
+		else
+			add(tbox_messages,line) -- add the word to the array
 		end
 	end
 end
@@ -53,7 +66,7 @@ end
 
 function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
-	tbox("this is a super long test that should trigger the line break capabilities") -- add a test message box
+	tbox("this is a super long test that should trigger the line break thing be sure to use short words because long ones throw off the line break capability!") -- add a test message box
 end
 
 function _update()
