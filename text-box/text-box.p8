@@ -6,14 +6,13 @@ t=0 -- the timer for keeping track of things
 
 -- add a new text box
 function tbox(message)
-	local last_whitespace=0
+	local linebreak=0
 
-	for i=0,flr(#message/26) do -- search through the message and break it into words
-		local new_line=sub(message,last_whitespace,last_whitespace+26)
-		-- todo: add backwards searching through new_line for whitespaces
+	for i=0,flr(#message/25) do -- search through the message and break it into words
+		local new_line=sub(message,linebreak,linebreak+25)
+
 		add(tbox_messages,new_line) -- add the word to the array
-		last_whitespace+=25
-		printh(new_line) -- debug
+		linebreak+=25+1 -- +1 to avoid duplicating characters
 	end
 end
 
@@ -27,32 +26,22 @@ end
 
 -- draw the text boxes (if any)
 function tbox_draw()
-	if(#tbox_messages>0) then
-		local text_color=7 -- white text 
-		local fill_color=1 -- blue inner fill
-		local border_color=7 -- white border
-		local x=4
-		local y=100
-		local width= 119 -- 127-x*2
-		local height= 23
-		local border_thickness=2
-		local padding=5
+	if(#tbox_messages>0) then -- don't draw if there are no messages
+		rectfill(4, 100, 123, 123, 7) -- draw border rectangle
+		rectfill(6, 102, 121, 121, 1) -- draw fill rectangle
+		line(6, 102, 121, 102, 6) -- draw top border shadow 
+		line(4, 124, 123, 124, 6) -- draw bottom border shadow 
 
-		rectfill(x, y, x+width, y+height, border_color) -- draw border rectangle
-		rectfill(x+border_thickness, y+border_thickness, x+width-border_thickness, y+height-border_thickness, fill_color) -- draw fill rectangle
-		line(x+border_thickness, y+border_thickness, x+width-border_thickness, y+border_thickness, 6) -- draw top border shadow 
-		line(x, y+height+border_thickness/2, x+width, y+height+border_thickness/2, 6) -- draw bottom border shadow 
-
-		print(tbox_messages[1], x+padding, y+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
+		print(tbox_messages[1], 9, 106, 7) -- print the message (with 5+1 in the 100 direction to account for the fanc100 top border shadow)
 		if #tbox_messages>1 then
-			print(tbox_messages[2], x+padding, y+8+padding+1, text_color) -- print the message (with padding+1 in the y direction to account for the fancy top border shadow)
+			print(tbox_messages[2], 9, 114, 7) -- print the message (with 5+1 in the 100 direction to account for the fanc100 top border shadow)
 		end
 		
-		-- animate the arrow
+		-- draw and animate the arrow
 		if(t%10<5) then
-			spr(1, x+width-border_thickness*2-padding*2+2, y+height-border_thickness*2-padding*2+2) -- draw the continue arrow in the bottom-right corner (with some padding to get it closer to the corner)
+			spr(1, 112, 112)
 		else
-			spr(1, x+width-border_thickness*2-padding*2+2, y+height-border_thickness*2-padding*2+3) -- draw the continue arrow in the bottom-right corner (with some padding to get it closer to the corner)
+			spr(1, 112, 113)
 		end
 	end
 end
@@ -77,11 +66,11 @@ __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000007777700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000777000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000070000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000777770000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000077700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000007000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
