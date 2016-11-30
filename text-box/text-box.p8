@@ -6,13 +6,16 @@ t=0 -- the timer for keeping track of things
 
 -- add a new text box
 function tbox(message)
-	local linebreak=0
+	if #tbox_messages>1 and #tbox_messages%2==1 then -- add an empty line for a "new" dialogue box if a previous message exists in the queue
+		add(tbox_messages,"")
+	end
 
-	for i=0,-flr(-#message/25) do -- search through the message and break it into words
-		local line=sub(message,linebreak,linebreak+26) -- lines are 25 characters but grap 26 to do a lookahead check
-		printh(line..#line)
+	local linebreak=1 -- keeps track of the last linebreak position
 
-		if #line>=26 then
+	for i=0,flr(#message/25) do -- search through the message and break it into words
+		local line=sub(message,linebreak,linebreak+25) -- lines are 25 characters but grab 26 to do a lookahead check
+
+		if #line==26 and #message>linebreak+25 then
 			for j=#line,0,-1 do -- look backward for the first whitespace character to determine the linebreak
 				if sub(line,j,j)==" " then
 					local lookahead=0
@@ -22,10 +25,8 @@ function tbox(message)
 					end
 
 					add(tbox_messages,sub(line,0,j+lookahead)) -- add the word to the array
-					linebreak+=j+lookahead
-					break
-				elseif j==0 then
 					linebreak+=j
+					break
 				end
 			end
 		else
@@ -37,26 +38,30 @@ end
 -- check for button presses so we can clear text box messages
 function tbox_check()
 	if btnp(5) and #tbox_messages>0 then
-		del(tbox_messages,tbox_messages[1])
+		if #tbox_messages>1 then
+			del(tbox_messages,tbox_messages[1])
+		end
+
 		del(tbox_messages,tbox_messages[1])
 	end
 end
 
 -- draw the text boxes (if any)
 function tbox_draw()
-	if(#tbox_messages>0) then -- don't draw if there are no messages
+	if #tbox_messages>0 then -- don't draw if there are no messages
 		rectfill(4, 100, 123, 123, 7) -- draw border rectangle
 		rectfill(6, 102, 121, 121, 1) -- draw fill rectangle
 		line(6, 102, 121, 102, 6) -- draw top border shadow 
 		line(4, 124, 123, 124, 6) -- draw bottom border shadow 
 
-		print(tbox_messages[1], 9, 106, 7) -- print the message (with 5+1 in the 100 direction to account for the fanc100 top border shadow)
-		if #tbox_messages>1 then
-			print(tbox_messages[2], 9, 114, 7) -- print the message (with 5+1 in the 100 direction to account for the fanc100 top border shadow)
+		-- draw the lines of text
+		print(tbox_messages[1], 9, 106, 7) 
+		if #tbox_messages>1 then -- don't draw a second line if one doesn't exist
+			print(tbox_messages[2], 9, 114, 7) 
 		end
 		
 		-- draw and animate the arrow
-		if(t%10<5) then
+		if t%10<5 then
 			spr(1, 112, 112)
 		else
 			spr(1, 112, 113)
@@ -66,7 +71,9 @@ end
 
 function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
-	tbox("this is a super long test that should trigger the line break thing be sure to use short words because long ones throw off the line break capability!") -- add a test message box
+	tbox("this is a super long test that should trigger the line break thing be sure to use short words because long ones throw off the line break capability because logics!") -- add a test message box
+	tbox("this is a second text that's a two-liner!")
+	tbox("this is a third test does it work?")
 end
 
 function _update()
