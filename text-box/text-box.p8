@@ -6,25 +6,14 @@ t=0 -- the timer for keeping track of things
 
 -- add a new text box
 function tbox(message)
-	local effective_width=105 -- width-border_thickness*2-padding*2
-	local line_count=flr(#message*4/effective_width) -- characters are 4 pixels wide
-	local line_width=flr(effective_width/4)
-
-	local tbox_words={} -- an array of words in the provided string
 	local last_whitespace=0
 
-	for i=0,#message do -- search through the message and break it into words
-		if sub(message,i,i)==" " or i==#message then
-			add(tbox_words,sub(message,last_whitespace,i)) -- add the word to the array
-			printh(tbox_words[#tbox_words]) -- debug
-			last_whitespace=i+1 -- +1 to ignore the whitespace we just found
-		end
-	end
-
-	if #message>effective_width/4 then
-		for i=0,line_count do
-			add(tbox_messages,sub(message,i*line_width,i*line_width+line_width))
-		end
+	for i=0,flr(#message/26) do -- search through the message and break it into words
+		local new_line=sub(message,last_whitespace,last_whitespace+26)
+		-- todo: add backwards searching through new_line for whitespaces
+		add(tbox_messages,new_line) -- add the word to the array
+		last_whitespace+=25
+		printh(new_line) -- debug
 	end
 end
 
