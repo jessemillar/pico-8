@@ -11,8 +11,13 @@ function tbox(message)
 	for i=0,flr(#message/25) do -- search through the message and break it into words
 		local new_line=sub(message,linebreak,linebreak+25)
 
-		add(tbox_messages,new_line) -- add the word to the array
-		linebreak+=25+1 -- +1 to avoid duplicating characters
+		for j=25,0,-1 do -- look backward for the first whitespace character to determine the linebreak
+			if sub(new_line,j,j)==" " then
+				add(tbox_messages,sub(new_line,0,j)) -- add the word to the array
+				linebreak+=j
+				break
+			end
+		end
 	end
 end
 
