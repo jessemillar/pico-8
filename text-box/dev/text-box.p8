@@ -80,22 +80,6 @@ function tbox_draw()
 	end
 end
 
-function static()
-	local colors={1,5,13}
-
-	for i=0,63 do
-		line(0,i*2,127,i*2,colors[flr(rnd(#colors+1))])
-	end
-end
-
-function shake(reset)
-	camera(0,0)
-
-	if not reset then
-		camera(flr(rnd(10)-5),flr(rnd(10)-5))
-	end
-end
-
 function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
 	tbox("bernard: he-hello...? this is bernard. is anyone there? over...") -- add a test message box
@@ -117,8 +101,6 @@ end
 
 function _draw()
 	cls() -- clear the screen
-	static()
-	shake()
 	tbox_draw() -- draw the message boxes (if any)
 end
 
