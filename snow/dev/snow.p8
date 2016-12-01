@@ -5,24 +5,27 @@ __lua__
 t=0
 
 function snow()
-	if #snowflakes==0 then
-		for i=0,100 do
-			local flake={x=flr(rnd(127)),y=flr(rnd(127))}
+	if #snowflakes==0 then -- fill the screen with snowflakes
+		for i=0,900 do
+			local flake={x=flr(rnd(200)-36),y=flr(rnd(127))} -- place to the left and right of the screen so we don't see the edges of the sine wave
 			add(snowflakes,flake)
 		end
 	else
-		for i=0,10 do
-			local flake={x=flr(rnd(127)),y=0}
+		for i=0,3 do -- add a few flakes each frame
+			local flake={x=flr(rnd(200)-36),y=0}
 			add(snowflakes,flake)
 		end
 	end
 
 	for flake in all(snowflakes) do
-		flake.y+=1
-		flake.x=sin(t)*10
+		if t%2<1 then -- slow the decent of flakes
+			flake.y+=flr(rnd(2)+1)
+		end
+
+		flake.x+=cos(t/300)/5 -- make flakes float left and right
 		pset(flake.x, flake.y, 7) -- draw the flake
 
-		if flake.y>127 then
+		if flake.y>127 then -- if the flakes are outside the screen delete them
 			del(snowflakes, flake)
 		end
 	end
