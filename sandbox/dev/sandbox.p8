@@ -3,7 +3,6 @@ version 8
 __lua__
 
 t=0 -- the timer for keeping track of things
-static_array={}
 
 -- add a new text box
 function tbox(message)
@@ -89,6 +88,14 @@ function static()
 	end
 end
 
+function shake(reset)
+	camera(0,0)
+
+	if not reset then
+		camera(flr(rnd(10)-5),flr(rnd(10)-5))
+	end
+end
+
 function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
 	tbox("bernard: he-hello...? this is bernard. is anyone there? over...") -- add a test message box
@@ -111,6 +118,7 @@ end
 function _draw()
 	cls() -- clear the screen
 	static()
+	shake()
 	tbox_draw() -- draw the message boxes (if any)
 end
 
