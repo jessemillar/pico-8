@@ -3,14 +3,15 @@ version 8
 __lua__
 
 t=0 -- the timer for keeping track of things
+static_array={}
 
 -- add a new text box
 function tbox(message)
+	local linebreak=1 -- keeps track of the last linebreak position
+
 	if #tbox_messages>1 and #tbox_messages%2==1 then -- add an empty line for a "new" dialogue box if a previous message exists in the queue
 		add(tbox_messages,"")
 	end
-
-	local linebreak=1 -- keeps track of the last linebreak position
 
 	for i=0,flr(#message/25) do -- search through the message and break it into words
 		local line=sub(message,linebreak,linebreak+25) -- lines are 25 characters but grab 26 to do a lookahead check
@@ -36,13 +37,24 @@ function tbox(message)
 end
 
 -- check for button presses so we can clear text box messages
-function tbox_check()
+function tbox_interact()
 	if btnp(5) and #tbox_messages>0 then
+		sfx(0) -- play a sound effect
+
 		if #tbox_messages>1 then
 			del(tbox_messages,tbox_messages[1])
 		end
 
 		del(tbox_messages,tbox_messages[1])
+	end
+end
+
+-- check if a text box is currently visible (useful if the dialogue clear button is used for other actions as well)
+function tbox_active()
+	if #tbox_messages>0 then
+		return true
+	else
+		return false
 	end
 end
 
@@ -69,21 +81,36 @@ function tbox_draw()
 	end
 end
 
+function static()
+	local colors={1,5,13}
+
+	for i=0,63 do
+		line(0,i*2,127,i*2,colors[flr(rnd(#colors+1))])
+	end
+end
+
 function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
-	tbox("this is a super long test that should trigger the line break thing be sure to use short words because long ones throw off the line break capability because logics!") -- add a test message box
-	tbox("this is a second text that's a two-liner!")
-	tbox("this is a third test does it work?")
+	tbox("bernard: he-hello...? this is bernard. is anyone there? over...") -- add a test message box
+	tbox("gregory: yes! i am herrrre! over!")
+	tbox("bernard: cool! how are you? over.")
+	tbox("gregory: i'm good, man. how are you? over!")
+	tbox("bernard: so good. over.")
+	tbox("lewis: i am good toooooo guys!")
+	tbox("gregory: lewis? is that you? how did you get this frequency? over.")
+	tbox("lewis: i have my wayz.")
+	tbox("bernard: you're a crazy pong, lewis.")
+	tbox("lewis: why, thank you, sir bernard.")
 end
 
 function _update()
 	t=t+1 -- increment the clock
-	tbox_check()
+	tbox_interact()
 end
 
 function _draw()
 	cls() -- clear the screen
-	rectfill(0, 0, 128, 128, 3) -- fill the screen with a color for size testing purposes
+	static()
 	tbox_draw() -- draw the message boxes (if any)
 end
 
@@ -253,7 +280,7 @@ __map__
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __sfx__
-000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+010500002452000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
