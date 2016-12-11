@@ -5,27 +5,62 @@ __lua__
 t=0
 
 function _init()
-	increment=0.01
-	player={sp=1, x=59, y=59, center={x=3, y=3}, angles={shooting=0, walking=0}}
+	increment=0.03
+
+	bullets={} -- keep track of bullets
+
+	player={
+		sp=1,
+		x=59,
+		y=59,
+		center={
+			x=3,
+			y=3,
+		},
+		reticles={
+			shooting={
+				angle=0,
+				x=0,
+				y=0,
+			},
+			walking={
+				angle=0,
+				x=0,
+				y=0,
+			},
+		},
+	}
 end
 
 function _update()
 	t=t+1 -- increment the clock
 
 	if btn(0) then
-		player.angles.shooting-=increment
+		player.reticles.shooting.angle-=increment
 	end
 
 	if btn(1) then
-		player.angles.shooting+=increment
+		player.reticles.shooting.angle+=increment
 	end
 
 	if btn(2) then
-		player.angles.walking+=increment
+		player.reticles.walking.angle+=increment
 	end
 
 	if btn(3) then
-		player.angles.walking-=increment
+		player.reticles.walking.angle-=increment
+	end
+
+	if btn(4) then
+		move_toward(player, player.reticles.walking.x, player.reticles.walking.y, 2)
+	end
+
+	if btnp(5) then
+		shoot()
+	end
+
+	for i in all(bullets) do
+		physics(i)
 	end
 end
 
@@ -33,6 +68,11 @@ function _draw()
 	cls() -- clear the screen
 	spr(player.sp, player.x, player.y) -- draw the player
 	draw_reticles() -- draw the aiming and moving reticles
+	
+	-- draw the bullets
+	for i in all(bullets) do
+		pset(i.x, i.y, 8)
+	end
 end
 
 function draw_reticles() -- draw the aiming and moving reticles
@@ -42,24 +82,49 @@ function draw_reticles() -- draw the aiming and moving reticles
 
 	circ(center_x, center_y, radius, 1) -- draw the visible circle
 
-	-- calculate the shooting reticle's position
-	local px=center_x+sin(player.angles.shooting)*radius
-	local py=center_y+cos(player.angles.shooting)*radius
+	-- calculate the shooting reticles's position
+	player.reticles.shooting.x=center_x+sin(player.reticles.shooting.angle)*radius
+	player.reticles.shooting.y=center_y+cos(player.reticles.shooting.angle)*radius
 
-	circfill(px, py, 1, 2) -- draw the shooting reticle
+	circfill(player.reticles.shooting.x, player.reticles.shooting.y, 1, 2) -- draw the shooting reticles
 
-	-- calculate the walking reticle's position
-	local px=center_x+sin(player.angles.walking)*radius
-	local py=center_y+cos(player.angles.walking)*radius
+	-- calculate the walking reticles's position
+	player.reticles.walking.x=center_x+sin(player.reticles.walking.angle)*radius
+	player.reticles.walking.y=center_y+cos(player.reticles.walking.angle)*radius
 
-	circfill(px, py, 1, 13) -- draw the walking reticle
+	circfill(player.reticles.walking.x, player.reticles.walking.y, 1, 13) -- draw the walking reticles
 end
 
-function walk() -- walk in the direction of the walking reticle
-	local speed=2
+function move_toward(obj, x, y, speed) -- move an object toward a point
+	local horizontal=x-obj.x
+	local vertical=y-obj.y
+	local total=sqrt(horizontal*horizontal+vertical*vertical)
 
-	player.x+=speed
-	player.y+=
+	if total>1 then
+		obj.x+=horizontal/total*speed
+		obj.y+=vertical/total*speed
+	end
+end
+
+function shoot()
+	local speed=5
+	local horizontal=player.reticles.shooting.x-player.x
+	local vertical=player.reticles.shooting.y-player.y
+	local total=sqrt(horizontal*horizontal+vertical*vertical)
+
+	local bullet={
+		x=player.x+player.center.x,
+		y=player.y+player.center.y,
+		dx=horizontal/total*speed,
+		dy=vertical/total*speed,
+	}
+
+	add(bullets, bullet) 
+end
+
+function physics(obj)
+	obj.x+=obj.dx
+	obj.y+=obj.dy
 end
 
 __gfx__
