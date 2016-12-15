@@ -13,7 +13,7 @@ function tbox(speaker, message)
 	end
 
 	for i=0,flr(#message/25) do -- search through the message and break it into words
-		local line=sub(message,linebreak,linebreak+25) -- lines are 25 characters but grab 26 to do a lookahead check
+		local line=sub(message, linebreak, linebreak+25) -- lines are 25 characters but grab 26 to do a lookahead check
 
 		if #line==26 and #message>linebreak+25 then -- if we're not near the end of the message
 			for j=#line,0,-1 do -- look backward for the first whitespace character to determine the linebreak
@@ -24,7 +24,7 @@ function tbox(speaker, message)
 						lookahead=1
 					end
 
-					tbox_line(speaker, sub(line,0,j+lookahead)) -- add the word to the array
+					tbox_line(speaker, sub(line, 0, j+lookahead)) -- add the word to the array
 					linebreak+=j
 					break
 				end
@@ -68,7 +68,18 @@ end
 function tbox_draw()
 	if #tbox_messages>0 then -- only draw if there are messages
 		if #tbox_messages[1].speaker>0 then
-			printh(tbox_messages[1].speaker)
+			local speaker_width=#tbox_messages[1].speaker*4
+
+			if speaker_width>111 then
+				speaker_width=111
+			end
+
+			rectfill(4, 82, speaker_width+12, 97, 7) -- draw border rectangle
+			rectfill(6, 85, speaker_width+10, 95, 1) -- draw fill rectangle
+			line(6, 84, speaker_width+10, 84, 6) -- draw top border shadow 
+			line(4, 98, speaker_width+12, 98, 6) -- draw bottom border shadow 
+
+			print(sub(tbox_messages[1].speaker, 0, 27), 9, 88, 7)
 		end
 
 		rectfill(4, 100, 123, 123, 7) -- draw border rectangle
@@ -95,7 +106,7 @@ function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
 	tbox("melissa", "i have a hoodie.")
 	tbox("", "i have one too!")
-	tbox("pablo", "me three!")
+	tbox("123123123123123123123123123123", "test a a a a a a a a a a a a a a a a a a a a a a a a a a")
 	-- tbox("bernard: he-hello...? this is bernard. is anyone there? over...")
 	-- tbox("gregory: yes! i am herrrre! over!")
 	-- tbox("bernard: cool! how are you? over.")
