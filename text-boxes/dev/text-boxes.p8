@@ -5,17 +5,17 @@ __lua__
 t=0 -- the timer for keeping track of things
 
 -- add a new text box
-function tbox(message)
+function tbox(speaker, message)
 	local linebreak=1 -- keeps track of the last linebreak position
 
-	if #tbox_messages>1 and #tbox_messages%2==1 then -- add an empty line for a "new" dialogue box if a previous message exists in the queue
-		add(tbox_messages,"")
+	if #tbox_messages>0 and #tbox_messages%2==1 then -- add an empty line for a "new" dialogue box if a previous message exists in the queue
+		tbox_line(speaker, "")
 	end
 
 	for i=0,flr(#message/25) do -- search through the message and break it into words
 		local line=sub(message,linebreak,linebreak+25) -- lines are 25 characters but grab 26 to do a lookahead check
 
-		if #line==26 and #message>linebreak+25 then
+		if #line==26 and #message>linebreak+25 then -- if we're not near the end of the message
 			for j=#line,0,-1 do -- look backward for the first whitespace character to determine the linebreak
 				if sub(line,j,j)==" " then
 					local lookahead=0
@@ -24,27 +24,34 @@ function tbox(message)
 						lookahead=1
 					end
 
-					add(tbox_messages,sub(line,0,j+lookahead)) -- add the word to the array
+					tbox_line(speaker, sub(line,0,j+lookahead)) -- add the word to the array
 					linebreak+=j
 					break
 				end
 			end
 		else
-			add(tbox_messages,line) -- add the word to the array
+			tbox_line(speaker, line) -- add the rest of the message to the text boxes array
+			break -- only add the message once
 		end
 	end
 end
 
+-- a utility function for easily adding a line to the messages array
+function tbox_line(speaker, line)
+	local line={speaker=speaker, line=line}
+	add(tbox_messages, line)
+end
+
 -- check for button presses so we can clear text box messages
 function tbox_interact()
-	if btnp(5) and #tbox_messages>0 then
+	if btnp(4) and #tbox_messages>0 then
 		sfx(0) -- play a sound effect
 
 		if #tbox_messages>1 then
-			del(tbox_messages,tbox_messages[1])
+			del(tbox_messages, tbox_messages[1])
 		end
 
-		del(tbox_messages,tbox_messages[1])
+		del(tbox_messages, tbox_messages[1])
 	end
 end
 
@@ -59,16 +66,20 @@ end
 
 -- draw the text boxes (if any)
 function tbox_draw()
-	if #tbox_messages>0 then -- don't draw if there are no messages
+	if #tbox_messages>0 then -- only draw if there are messages
+		if #tbox_messages[1].speaker>0 then
+			printh(tbox_messages[1].speaker)
+		end
+
 		rectfill(4, 100, 123, 123, 7) -- draw border rectangle
 		rectfill(6, 102, 121, 121, 1) -- draw fill rectangle
 		line(6, 102, 121, 102, 6) -- draw top border shadow 
 		line(4, 124, 123, 124, 6) -- draw bottom border shadow 
 
 		-- draw the lines of text
-		print(tbox_messages[1], 9, 106, 7) 
-		if #tbox_messages>1 then -- don't draw a second line if one doesn't exist
-			print(tbox_messages[2], 9, 114, 7) 
+		print(tbox_messages[1].line, 9, 106, 7) 
+		if #tbox_messages>1 then -- only draw a second line if one exist
+			print(tbox_messages[2].line, 9, 114, 7) 
 		end
 		
 		-- draw and animate the arrow
@@ -82,16 +93,19 @@ end
 
 function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
-	tbox("bernard: he-hello...? this is bernard. is anyone there? over...") -- add a test message box
-	tbox("gregory: yes! i am herrrre! over!")
-	tbox("bernard: cool! how are you? over.")
-	tbox("gregory: i'm good, man. how are you? over!")
-	tbox("bernard: so good. over.")
-	tbox("lewis: i am good toooooo guys!")
-	tbox("gregory: lewis? is that you? how did you get this frequency? over.")
-	tbox("lewis: i have my wayz.")
-	tbox("bernard: you're a crazy pong, lewis.")
-	tbox("lewis: why, thank you, sir bernard.")
+	tbox("melissa", "i have a hoodie.")
+	tbox("", "i have one too!")
+	tbox("pablo", "me three!")
+	-- tbox("bernard: he-hello...? this is bernard. is anyone there? over...")
+	-- tbox("gregory: yes! i am herrrre! over!")
+	-- tbox("bernard: cool! how are you? over.")
+	-- tbox("gregory: i'm good, man. how are you? over!")
+	-- tbox("bernard: so good. over.")
+	-- tbox("lewis: i am good toooooo guys!")
+	-- tbox("gregory: lewis? is that you? how did you get this frequency? over.")
+	-- tbox("lewis: i have my wayz.")
+	-- tbox("bernard: you're a crazy pong, lewis.")
+	-- tbox("lewis: why, thank you, sir bernard.")
 end
 
 function _update()
