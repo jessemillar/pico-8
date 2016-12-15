@@ -104,19 +104,16 @@ end
 
 function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
-	tbox("melissa", "i have a hoodie.")
-	tbox("", "i have one too!")
-	tbox("123123123123123123123123123123", "test a a a a a a a a a a a a a a a a a a a a a a a a a a")
-	-- tbox("bernard: he-hello...? this is bernard. is anyone there? over...")
-	-- tbox("gregory: yes! i am herrrre! over!")
-	-- tbox("bernard: cool! how are you? over.")
-	-- tbox("gregory: i'm good, man. how are you? over!")
-	-- tbox("bernard: so good. over.")
-	-- tbox("lewis: i am good toooooo guys!")
-	-- tbox("gregory: lewis? is that you? how did you get this frequency? over.")
-	-- tbox("lewis: i have my wayz.")
-	-- tbox("bernard: you're a crazy pong, lewis.")
-	-- tbox("lewis: why, thank you, sir bernard.")
+	tbox("bernard", "he-hello...? this is bernard. is anyone there? over...")
+	tbox("gregory", "yes! i am herrrre! over!")
+	tbox("bernard", "cool! how are you? over.")
+	tbox("gregory", "i'm good, man. how are you? over!")
+	tbox("bernard", "so good. over.")
+	tbox("lewis", "i am good toooooo guys!")
+	tbox("gregory", "lewis? is that you? how did you get this frequency? over.")
+	tbox("lewis", "i have my wayz.")
+	tbox("bernard", "you're a crazy pong, lewis.")
+	tbox("lewis", "why, thank you, sir bernard.")
 end
 
 function _update()
@@ -126,6 +123,7 @@ end
 
 function _draw()
 	cls() -- clear the screen
+	rectfill(0, 0, 127, 127, 2) -- draw a fill color for sizing
 	tbox_draw() -- draw the message boxes (if any)
 end
 
