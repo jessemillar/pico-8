@@ -12,10 +12,10 @@ function tbox(speaker, message)
 		tbox_line(speaker, "")
 	end
 
-	for i=0,flr(#message/25) do -- search through the message and break it into words
-		local line=sub(message, linebreak, linebreak+25) -- lines are 25 characters but grab 26 to do a lookahead check
+	for i=0,flr(#message/26) do -- search through the message and break it into words
+		local line=sub(message, linebreak, linebreak+26) -- lines are 26 characters but grab 26 to do a lookahead check
 
-		if #line==26 and #message>linebreak+25 then -- if we're not near the end of the message
+		if #line==27 and #message>linebreak+26 then -- if we're not near the end of the message
 			for j=#line,0,-1 do -- look backward for the first whitespace character to determine the linebreak
 				if sub(line,j,j)==" " then
 					local lookahead=0
@@ -70,27 +70,27 @@ function tbox_draw()
 		if #tbox_messages[1].speaker>0 then
 			local speaker_width=#tbox_messages[1].speaker*4
 
-			if speaker_width>111 then
-				speaker_width=111
+			if speaker_width>112 then
+				speaker_width=112
 			end
 
-			rectfill(4, 82, speaker_width+12, 97, 7) -- draw border rectangle
-			rectfill(6, 85, speaker_width+10, 95, 1) -- draw fill rectangle
-			line(6, 84, speaker_width+10, 84, 6) -- draw top border shadow 
-			line(4, 98, speaker_width+12, 98, 6) -- draw bottom border shadow 
+			rectfill(3, 82, speaker_width+12, 97, 7) -- draw border rectangle
+			rectfill(5, 84, speaker_width+10, 95, 1) -- draw fill rectangle
+			line(5, 84, speaker_width+10, 84, 6) -- draw top border shadow 
+			line(3, 98, speaker_width+12, 98, 6) -- draw bottom border shadow 
 
-			print(sub(tbox_messages[1].speaker, 0, 27), 9, 88, 7)
+			print(sub(tbox_messages[1].speaker, 0, 27), 8, 88, 7)
 		end
 
-		rectfill(4, 100, 123, 123, 7) -- draw border rectangle
-		rectfill(6, 102, 121, 121, 1) -- draw fill rectangle
-		line(6, 102, 121, 102, 6) -- draw top border shadow 
-		line(4, 124, 123, 124, 6) -- draw bottom border shadow 
+		rectfill(3, 100, 124, 123, 7) -- draw border rectangle
+		rectfill(5, 102, 122, 121, 1) -- draw fill rectangle
+		line(5, 102, 122, 102, 6) -- draw top border shadow 
+		line(3, 124, 124, 124, 6) -- draw bottom border shadow 
 
 		-- draw the lines of text
-		print(tbox_messages[1].line, 9, 106, 7) 
+		print(tbox_messages[1].line, 8, 106, 7) 
 		if #tbox_messages>1 then -- only draw a second line if one exist
-			print(tbox_messages[2].line, 9, 114, 7) 
+			print(tbox_messages[2].line, 8, 114, 7) 
 		end
 		
 		-- draw and animate the arrow
