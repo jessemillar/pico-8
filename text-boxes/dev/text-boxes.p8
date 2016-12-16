@@ -67,6 +67,12 @@ end
 -- draw the text boxes (if any)
 function tbox_draw()
 	if #tbox_messages>0 then -- only draw if there are messages
+		rectfill(3, 103, 124, 123, 7) -- draw border rectangle
+		rectfill(5, 106, 122, 121, 1) -- draw fill rectangle
+		line(5, 105, 122, 105, 6) -- draw top border shadow 
+		line(3, 124, 124, 124, 6) -- draw bottom border shadow 
+
+		-- draw the speaker portrait
 		if #tbox_messages[1].speaker>0 then
 			local speaker_width=#tbox_messages[1].speaker*4
 
@@ -74,21 +80,15 @@ function tbox_draw()
 				speaker_width=115
 			end
 
-			rectfill(3, 86, speaker_width+9, 99, 7) -- draw border rectangle
-			rectfill(5, 89, speaker_width+7, 97, 1) -- draw fill rectangle
-			line(5, 88, speaker_width+7, 88, 6) -- draw top border shadow 
-			line(3, 100, speaker_width+9, 100, 6) -- draw bottom border shadow 
+			rectfill(3, 96, speaker_width+9, 102, 7) -- draw border rectangle
+			rectfill(5, 99, speaker_width+7, 105, 1) -- draw fill rectangle
+			line(5, 98, speaker_width+7, 98, 6) -- draw top border shadow 
 
-			print(sub(tbox_messages[1].speaker, 0, 28), 7, 91, 7)
+			print(sub(tbox_messages[1].speaker, 0, 28), 7, 101, 7)
 		end
 
-		rectfill(3, 102, 124, 123, 7) -- draw border rectangle
-		rectfill(5, 105, 122, 121, 1) -- draw fill rectangle
-		line(5, 104, 122, 104, 6) -- draw top border shadow 
-		line(3, 124, 124, 124, 6) -- draw bottom border shadow 
-
-		-- draw the lines of text
-		print(tbox_messages[1].line, 7, 107, 7) 
+		-- print the message
+		print(tbox_messages[1].line, 7, 108, 7) 
 		if #tbox_messages>1 then -- only draw a second line if one exist
 			print(tbox_messages[2].line, 7, 115, 7) 
 		end
@@ -104,8 +104,8 @@ end
 
 function _init()
 	tbox_messages={} -- the array for keeping track of text box overflows
-	tbox("bernard", "you're a crazy pong, lewis you're a crazy pong, lewiss")
-	tbox("bernard", "he-hello...? this is bernard. is anyone there?? over...")
+	tbox("", "the chest contained spray cheese!")
+	tbox("bernard", "he-hello...? this is bernard. is anyone there? over...")
 	tbox("gregory", "yes! i am herrrre! over!")
 	tbox("bernard", "cool! how are you? over.")
 	tbox("gregory", "i'm good, man. how are you? over!")
