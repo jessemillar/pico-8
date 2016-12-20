@@ -6,9 +6,9 @@ var ctx = canvas.getContext('2d')
 
 var database = new Array()
 
-function getPicoColor(color_r, color_g, color_b) {
-	var picoColors = ["#000000", "#1d2e52", "#733255", "#3f8150", "#a0583f", "#5e5750", "#c2c3c7", "#fdf1e9", "#e9425b", "#f3a433", "#ffe641", "#71d835", "#4eb0fb", "#7f7a9b", "#ed86ac", "#f7cdae"];
+var picoColors = ["#000000", "#1d2e52", "#733255", "#3f8150", "#a0583f", "#5e5750", "#c2c3c7", "#fdf1e9", "#e9425b", "#f3a433", "#ffe641", "#71d835", "#4eb0fb", "#7f7a9b", "#ed86ac", "#f7cdae"];
 
+function getPicoColor(color_r, color_g, color_b) {
 	//Create an emtyp array for the difference betwwen the colors
 	var differenceArray = [];
 
@@ -101,6 +101,13 @@ function changeColors(data, container) {
 			var position = y * 4 * canvas.width + x * 4
 
 			var color = getPicoColor(container.data[position], container.data[position + 1], container.data[position + 2])
+
+			for (var i=0; i<picoColors.length; i++) {
+				if (color==picoColors[i]) {
+					data.push(i)
+				}
+			}
+
 			var rgbColor = hexToRGB(color).split(",")
 			container.data[position] = rgbColor[0]
 			container.data[position + 1] = rgbColor[1]
@@ -108,6 +115,7 @@ function changeColors(data, container) {
 		}
 	}
 
+	document.getElementById("encoded").value=data.join("-")
 	drawImageData(container)
 }
 
@@ -119,6 +127,6 @@ function drawImageData(container) // Run after convert
 function exportImage() {
 	var download = document.createElement('a')
 	download.href = canvas.toDataURL('images/png')
-	download.download = 'dither.png'
+	download.download = 'pico-encoded.png'
 	download.click()
 }

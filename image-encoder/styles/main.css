@@ -1,34 +1,37 @@
 body {
-	background-color: #ffffff;
+    background-color: #ffffff;
 }
 
 #load {
-	position: fixed;
-	top: 10px;
-	left: 10px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+}
 
-	z-index: 1;
+#encoded {
+    position: fixed;
+    top: 40px;
+    left: 10px;
+    z-index: 1;
 }
 
 #download {
-	position: fixed;
-	bottom: 10px;
-	left: 10px;
-
-	z-index: 1;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1;
 }
 
 #original {
-	position: absolute;
-	right: 0px;
-	top: 0px;
-
-	z-index: 0;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    z-index: 0;
 }
 
 #manipulated {
-	position: absolute;
-	right: 0px;
-
-	z-index: 0;
+    position: absolute;
+    right: 0px;
+    z-index: 0;
 }
