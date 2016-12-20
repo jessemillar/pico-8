@@ -5,53 +5,56 @@ __lua__
 t=0
 
 function draw_encoded(x, y, image)
-	for y_index=0,image[2] do
+	for y_index=0,image[2]-1 do
 		local i=1 -- reset the index for each row
 
-		for x_index=0,image[1] do
+		for x_index=0,image[1]-1 do
 			local row=image[y_index+3]
 			local char = ""
 
 			if sub(row, i+1, i+1)=="-" then
 				char=sub(row, i, i)
-				i+=1
+				i+=2
 			else
 				char=sub(row, i, i+1)
-				i+=2
+				i+=3
 			end
 
+			local x_pos=x_index+x
+			local y_pos=y_index+y
+
 			if char=="0" then
-				pset(x_index+x, y_index+y, 0)
+				pset(x_pos, y_pos, 0)
 			elseif char=="1" then
-				pset(x_index+x, y_index+y, 1)
+				pset(x_pos, y_pos, 1)
 			elseif char=="2" then
-				pset(x_index+x, y_index+y, 2)
+				pset(x_pos, y_pos, 2)
 			elseif char=="3" then
-				pset(x_index+x, y_index+y, 3)
+				pset(x_pos, y_pos, 3)
 			elseif char=="4" then
-				pset(x_index+x, y_index+y, 4)
+				pset(x_pos, y_pos, 4)
 			elseif char=="5" then
-				pset(x_index+x, y_index+y, 5)
+				pset(x_pos, y_pos, 5)
 			elseif char=="6" then
-				pset(x_index+x, y_index+y, 6)
+				pset(x_pos, y_pos, 6)
 			elseif char=="7" then
-				pset(x_index+x, y_index+y, 7)
+				pset(x_pos, y_pos, 7)
 			elseif char=="8" then
-				pset(x_index+x, y_index+y, 8)
+				pset(x_pos, y_pos, 8)
 			elseif char=="9" then
-				pset(x_index+x, y_index+y, 9)
+				pset(x_pos, y_pos, 9)
 			elseif char=="10" then
-				pset(x_index+x, y_index+y, 10)
+				pset(x_pos, y_pos, 10)
 			elseif char=="11" then
-				pset(x_index+x, y_index+y, 11)
+				pset(x_pos, y_pos, 11)
 			elseif char=="12" then
-				pset(x_index+x, y_index+y, 12)
+				pset(x_pos, y_pos, 12)
 			elseif char=="13" then
-				pset(x_index+x, y_index+y, 13)
+				pset(x_pos, y_pos, 13)
 			elseif char=="14" then
-				pset(x_index+x, y_index+y, 14)
+				pset(x_pos, y_pos, 14)
 			elseif char=="15" then
-				pset(x_index+x, y_index+y, 15)
+				pset(x_pos, y_pos, 15)
 			end
 		end
 	end
