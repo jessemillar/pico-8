@@ -4,35 +4,66 @@ __lua__
 
 t=0
 
-function snow()
-	if #snowflakes==0 then -- fill the screen with snowflakes
-		for i=0,900 do
-			local flake={x=flr(rnd(200)-36),y=flr(rnd(127))} -- place to the left and right of the screen so we don't see the edges of the sine wave
-			add(snowflakes,flake)
-		end
-	else
-		for i=0,3 do -- add a few flakes each frame
-			local flake={x=flr(rnd(200)-36),y=0}
-			add(snowflakes,flake)
-		end
-	end
+function draw_encoded(x, y, image)
+	for y_index=0,image[2] do
+		local i=1 -- reset the index for each row
 
-	for flake in all(snowflakes) do
-		if t%2<1 then -- slow the decent of flakes
-			flake.y+=flr(rnd(2)+1)
-		end
+		for x_index=0,image[1] do
+			local row=image[y_index+3]
+			local char = ""
 
-		flake.x+=cos(t/300)/5 -- make flakes float left and right
-		pset(flake.x, flake.y, 7) -- draw the flake
+			if sub(row, i+1, i+1)=="-" then
+				char=sub(row, i, i)
+				i+=1
+			else
+				char=sub(row, i, i+1)
+				i+=2
+			end
 
-		if flake.y>127 then -- if the flakes are outside the screen delete them
-			del(snowflakes, flake)
+			if char=="0" then
+				pset(x_index+x, y_index+y, 0)
+			elseif char=="1" then
+				pset(x_index+x, y_index+y, 1)
+			elseif char=="2" then
+				pset(x_index+x, y_index+y, 2)
+			elseif char=="3" then
+				pset(x_index+x, y_index+y, 3)
+			elseif char=="4" then
+				pset(x_index+x, y_index+y, 4)
+			elseif char=="5" then
+				pset(x_index+x, y_index+y, 5)
+			elseif char=="6" then
+				pset(x_index+x, y_index+y, 6)
+			elseif char=="7" then
+				pset(x_index+x, y_index+y, 7)
+			elseif char=="8" then
+				pset(x_index+x, y_index+y, 8)
+			elseif char=="9" then
+				pset(x_index+x, y_index+y, 9)
+			elseif char=="10" then
+				pset(x_index+x, y_index+y, 10)
+			elseif char=="11" then
+				pset(x_index+x, y_index+y, 11)
+			elseif char=="12" then
+				pset(x_index+x, y_index+y, 12)
+			elseif char=="13" then
+				pset(x_index+x, y_index+y, 13)
+			elseif char=="14" then
+				pset(x_index+x, y_index+y, 14)
+			elseif char=="15" then
+				pset(x_index+x, y_index+y, 15)
+			end
 		end
 	end
 end
 
 function _init()
-	snowflakes={} -- the array for keeping track of an animating the snow
+	test={ -- the string representing the full-page image
+		128,
+		2,
+		"2-2-2-0-2-2-2-2-1-1-1-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-2-",
+		"3-3-3-3-3-3-3-3-2-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-3-",
+	} 
 end
 
 function _update()
@@ -41,5 +72,5 @@ end
 
 function _draw()
 	cls() -- clear the screen
-	snow() -- make it snow
+	draw_encoded(0, 0, test) -- draw the test image
 end
