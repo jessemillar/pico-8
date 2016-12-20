@@ -96,15 +96,15 @@ function loaded(image) {
 }
 
 function changeColors(data, container) {
-	console.log(container)
 	for (var y = 0; y < canvas.height; y++) {
 		for (var x = 0; x < canvas.width; x++) {
 			var position = y * 4 * canvas.width + x * 4
 
-			var color = getPicoColor(container.data[position], container.data[position] + 1, container.data[position] + 2)
-			console.log(color)
+			var color = getPicoColor(container.data[position], container.data[position + 1], container.data[position + 2])
 			var rgbColor = hexToRGB(color).split(",")
-			console.log(rgbColor[0], rgbColor[1], rgbColor[2])
+			container.data[position] = rgbColor[0]
+			container.data[position + 1] = rgbColor[1]
+			container.data[position + 2] = rgbColor[2]
 		}
 	}
 
