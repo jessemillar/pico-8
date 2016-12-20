@@ -1,0 +1,1 @@
+I've always wanted a way to quickly play around with image compression/manipulation algorithms. This little project allows me to do just that. It's not too pretty, but it's fun. The magic happens in the /scripts folder.

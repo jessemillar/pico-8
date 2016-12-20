@@ -1,0 +1,34 @@
+body {
+	background-color: #ffffff;
+}
+
+#load {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+
+	z-index: 1;
+}
+
+#download {
+	position: fixed;
+	bottom: 10px;
+	left: 10px;
+
+	z-index: 1;
+}
+
+#original {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+
+	z-index: 0;
+}
+
+#manipulated {
+	position: absolute;
+	right: 0px;
+
+	z-index: 0;
+}
