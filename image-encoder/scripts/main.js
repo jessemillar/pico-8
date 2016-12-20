@@ -102,9 +102,25 @@ function changeColors(data, container) {
 
 			var color = getPicoColor(container.data[position], container.data[position + 1], container.data[position + 2])
 
-			for (var i=0; i<picoColors.length; i++) {
-				if (color==picoColors[i]) {
-					data.push(i)
+			for (var i = 0; i < picoColors.length; i++) {
+				if (color == picoColors[i]) {
+					if (i > 9) {
+						if (i == 10) {
+							data.push("a")
+						} else if (i == 11) {
+							data.push("b")
+						} else if (i == 12) {
+							data.push("c")
+						} else if (i == 13) {
+							data.push("d")
+						} else if (i == 14) {
+							data.push("e")
+						} else if (i == 15) {
+							data.push("f")
+						}
+					} else {
+						data.push(i)
+					}
 				}
 			}
 
@@ -115,7 +131,17 @@ function changeColors(data, container) {
 		}
 	}
 
-	document.getElementById("encoded").value=data.join("-")
+	printedData = "{\n"
+	printedData += "\t"+container.width + ",\n"
+	printedData += "\t"+container.height + ",\n"
+
+	for (var i = 0; i < data.length; i += container.width) {
+		console.log(i)
+		printedData += "\t\"" + data.slice(i, i + container.width).join("") + "\",\n"
+	}
+
+	printedData += "}"
+	document.getElementById("encoded").value = printedData
 	drawImageData(container)
 }
 
