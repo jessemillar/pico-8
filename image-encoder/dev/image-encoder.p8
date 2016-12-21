@@ -9,7 +9,7 @@ function draw_encoded(x, y, image, transparent)
 
 	for y_index=0,image[2]-1 do
 		for x_index=0,image[1]-1 do
-			local char=sub(image[y_index+3], x_index, x_index)
+			local char=sub(image[y_index+3], x_index+1, x_index+1)
 			local color=0
 
 			if char=="a" then
