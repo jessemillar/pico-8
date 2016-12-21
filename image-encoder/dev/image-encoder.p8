@@ -9,24 +9,7 @@ function draw_encoded(x, y, image, transparent)
 
 	for y_index=0,image[2]-1 do
 		for x_index=0,image[1]-1 do
-			local char=sub(image[y_index+3], x_index+1, x_index+1)
-			local color=0
-
-			if char=="a" then
-				color=10
-			elseif char=="b" then
-				color=11
-			elseif char=="c" then
-				color=12
-			elseif char=="d" then
-				color=13
-			elseif char=="e" then
-				color=14
-			elseif char=="f" then
-				color=15
-			else
-				color=char+0
-			end
+			local color=("0x"..sub(image[y_index+3], x_index+1, x_index+1))+0
 
 			if color!=transparent then
 				pset(x_index+x, y_index+y, color)
