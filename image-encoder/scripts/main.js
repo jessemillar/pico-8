@@ -63,10 +63,12 @@ function load() {
 	var file = document.getElementById('load').files[0]
 	var reader = new FileReader()
 
-	reader.onloadend = function() {
+	reader.onload = function() {
 		image.src = reader.result
 
-		loaded(image)
+		image.onload = function() {
+			loaded(image)
+		}
 	}
 
 	if (file) {
